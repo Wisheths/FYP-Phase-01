@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Pengurusan Peralatan Makmal SKR 2</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- SIDEBAR NAVIGATION (GEMINI-INSPIRED ICON RAIL SIDEBAR) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="brand-icon">SK</div>
+        <div class="brand-text">
+          <h2>Makmal SKR 2</h2>
+          <p>KV Alor Setar</p>
+        </div>
+      </div>
+      <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Kecilkan / Buka Sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-link active" href="#dashboard" onclick="showSection('dashboard', this)" title="Papan Pemuka">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Papan Pemuka</span>
+      </a>
+      <a class="nav-link" href="#peralatan" onclick="showSection('peralatan', this)" title="Peralatan">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        <span>Peralatan</span>
+      </a>
+      <a class="nav-link" href="#penyelenggaraan" onclick="showSection('penyelenggaraan', this)" title="Penyelenggaraan">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+        </svg>
+        <span>Penyelenggaraan</span>
+      </a>
+      <a class="nav-link" href="#modul-ramalan" onclick="showSection('modul-ramalan', this)" title="Ramalan Penyelenggaraan">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        <span>Ramalan Penyelenggaraan</span>
+      </a>
+      <a class="nav-link" href="#laporan" onclick="showSection('laporan', this)" title="Laporan">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span>Laporan</span>
+      </a>
+    </nav>
+
+    <!-- ROLE SWITCHER -->
+    <div class="user-card" title="Tukar Peranan Pengguna">
+      <div class="avatar" id="userAvatar">A</div>
+      <div class="user-info">
+        <strong id="userName">Admin</strong>
+        <select id="roleSelector" onchange="changeUserRole(this.value)" class="role-select">
+          <option value="Pentadbir">Pentadbir Sistem</option>
+          <option value="Juruteknik">Juruteknik Makmal</option>
+          <option value="Penyelia">Penyelia Makmal</option>
+        </select>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="main-content">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">SISTEM PENGURUSAN PERALATAN MAKMAL</p>
+        <h1 id="pageTitle">Papan Pemuka</h1>
+        <p class="subtitle" id="pageSubtitle">Ringkasan keadaan komputer dan status sistem di Makmal SKR 2.</p>
+      </div>
+    </header>
+
+    <!-- DASHBOARD SECTION -->
+    <section id="dashboard" class="content-section active-section">
+      <div class="stats-grid">
+        <article class="stat-card">
+          <p class="stat-label">Jumlah Komputer</p>
+          <strong class="stat-value" id="statTotal">0</strong>
+          <span class="stat-sub">Berdaftar dalam sistem</span>
+        </article>
+        <article class="stat-card">
+          <p class="stat-label">Dalam Keadaan Baik</p>
+          <strong class="stat-value green-text" id="statBaik">0</strong>
+          <span class="stat-sub green-text">Sedia digunakan</span>
+        </article>
+        <article class="stat-card">
+          <p class="stat-label">Perlu Perhatian</p>
+          <strong class="stat-value orange-text" id="statPerhatian">0</strong>
+          <span class="stat-sub orange-text">Perlu diperiksa</span>
+        </article>
+        <article class="stat-card">
+          <p class="stat-label">Dalam Penyelenggaraan</p>
+          <strong class="stat-value red-text" id="statRosak">0</strong>
+          <span class="stat-sub red-text">Belum selesai</span>
+        </article>
+      </div>
+
+      <div class="alert-banner">
+        <div class="alert-content">
+          <p class="alert-title">Peringatan Penyelenggaraan Terkini</p>
+          <p class="alert-desc" id="maintenanceAlertText">Menganalisis rekod peralatan makmal...</p>
+        </div>
+        <span class="badge attention" id="maintenanceAlertBadge">Peringatan</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Ringkasan Peralatan Terkini</h2>
+            <p>Paparan ringkas perkakasan aktif di makmal.</p>
+          </div>
+          <button class="button-link" onclick="showSection('peralatan', document.querySelectorAll('.nav-link')[1])">Lihat Semua →</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID Peralatan</th>
+                <th>Jenama / Model</th>
+                <th>Nombor Siri</th>
+                <th>Keadaan</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERALATAN SECTION -->
+    <section id="peralatan" class="content-section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Senarai Peralatan Makmal</h2>
+            <p>Pengurusan data komputer dan spesifikasi di Makmal SKR 2.</p>
+          </div>
+          <div class="panel-actions">
+            <input type="search" id="searchEquipment" placeholder="Cari ID, Model, Siri..." oninput="renderEquipmentTable()">
+            <button class="button admin-only" onclick="openAddModal()">+ Tambah Peralatan</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID Peralatan</th>
+                <th>Jenama / Model</th>
+                <th>Nombor Siri</th>
+                <th>Lokasi</th>
+                <th>Keadaan</th>
+                <th>Status</th>
+                <th class="admin-only">Tindakan</th>
+              </tr>
+            </thead>
+            <tbody id="equipmentTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PENYELENGGARAAN SECTION -->
+    <section id="penyelenggaraan" class="content-section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Rekod Penyelenggaraan & Pembaikan</h2>
+            <p>Sejarah tindakan penyelenggaraan dan catatan teknikal juruteknik.</p>
+          </div>
+          <div class="panel-actions">
+            <button class="button tech-only" onclick="openMaintenanceModal()">+ Rekod Penyelenggaraan</button>
+            <button class="button button-outline" onclick="window.print()">🖨️ Cetak Laporan PDF</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID Rekod</th>
+                <th>ID Peralatan</th>
+                <th>Jenis Penyelenggaraan</th>
+                <th>Tarikh</th>
+                <th>Catatan / Kerosakan</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="maintenanceTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODUL RAMALAN SECTION -->
+    <section id="modul-ramalan" class="content-section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Modul Ramalan Penyelenggaraan (Enjin Berasaskan Peraturan)</h2>
+            <p>Analisis sejarah kerosakan dan cadangan pembaikan berjadual mengikut peraturan teras.</p>
+          </div>
+        </div>
+
+        <div class="diagnostic-box">
+          <div class="form-group inline-select">
+            <label for="selectPcPrediction">Pilih Komputer untuk Analisis:</label>
+            <select id="selectPcPrediction" onchange="runPredictionAnalysis()" class="input-field"></select>
+          </div>
+
+          <div id="predictionResultBox" class="diagnostic-results">
+            <div class="diagnostic-header">
+              <h3>Keputusan Analisis: <span id="rulePcId" class="mono-text">-</span></h3>
+              <span id="ruleRiskBadge" class="badge">Menunggu Analisis</span>
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric-card">
+                <small class="metric-label">Indeks Risiko Kerosakan</small>
+                <strong class="metric-value" id="ruleRiskScore">0%</strong>
+              </div>
+              <div class="metric-card">
+                <small class="metric-label">Anggaran Cadangan Penyelenggaraan</small>
+                <strong class="metric-value highlight" id="ruleNextSchedule">-</strong>
+              </div>
+            </div>
+
+            <div class="action-panel">
+              <p class="action-title">Cadangan Tindakan Teknikal:</p>
+              <ul id="ruleActionList" class="action-list">
+                <li>Sila pilih komputer dari senarai di atas untuk memulakan analisis.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAPORAN SECTION -->
+    <section id="laporan" class="content-section">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Laporan Status Makmal SKR 2</h2>
+            <p>Laporan rasmi bagi kegunaan Penyelia Makmal dan Pentadbir.</p>
+          </div>
+        </div>
+
+        <div class="report-container">
+          <div class="report-box main-box">
+            <h3>Kesihatan Peralatan Makmal</h3>
+            <p id="reportHealthText" class="report-text">Sistem berada dalam keadaan baik dengan nisbah kebolehgunaan tinggi.</p>
+          </div>
+
+          <div class="report-box details-box">
+            <h4>Ringkasan Statistik Komputer</h4>
+            <ul class="report-stats">
+              <li><span>Jumlah Keseluruhan PC:</span> <strong id="repTotal">0</strong></li>
+              <li><span>PC Boleh Digunakan:</span> <strong id="repGood">0</strong></li>
+              <li><span>PC Memerlukan Penyelenggaraan:</span> <strong id="repMaintenance">0</strong></li>
+              <li><span>Jumlah Rekod Penyelenggaraan Direkodkan:</span> <strong id="repLogsCount">0</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      Projek Tahun Akhir (PTA) · Sistem Pengurusan Peralatan Makmal SKR 2 · Kolej Vokasional Alor Setar
+    </footer>
+  </main>
+
+  <!-- MODALS -->
+  <dialog id="equipmentModal" class="custom-modal">
+    <form id="equipmentForm" onsubmit="saveEquipment(event)" class="modal-form">
+      <div class="modal-header">
+        <h3 id="modalEquipmentTitle">Tambah Peralatan Baru</h3>
+      </div>
+      <input type="hidden" id="eqIndex" value="-1">
+      <div class="form-group">
+        <label>ID Peralatan (Contoh: PC-SKR2-005)</label>
+        <input type="text" id="eqId" required placeholder="PC-SKR2-XXX" class="input-field mono-text">
+      </div>
+      <div class="form-group">
+        <label>Jenama / Model</label>
+        <input type="text" id="eqModel" required placeholder="Dell OptiPlex / HP ProDesk" class="input-field">
+      </div>
+      <div class="form-group">
+        <label>Nombor Siri</label>
+        <input type="text" id="eqSerial" required placeholder="DL-100XX" class="input-field mono-text">
+      </div>
+      <div class="form-group">
+        <label>Lokasi / Meja</label>
+        <input type="text" id="eqLocation" required placeholder="Makmal SKR 2 - Meja 05" class="input-field">
+      </div>
+      <div class="form-group">
+        <label>Keadaan</label>
+        <select id="eqCondition" class="input-field">
+          <option value="Baik">Baik</option>
+          <option value="Perlu diperiksa">Perlu diperiksa</option>
+          <option value="Rosak">Rosak</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status Sistem</label>
+        <select id="eqStatus" class="input-field">
+          <option value="Aktif">Aktif</option>
+          <option value="Perlu perhatian">Perlu perhatian</option>
+          <option value="Penyelenggaraan">Penyelenggaraan</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="button button-outline" onclick="closeAddModal()">Batal</button>
+        <button type="submit" class="button">Simpan Rekod</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="maintenanceModal" class="custom-modal">
+    <form id="maintenanceForm" onsubmit="saveMaintenance(event)" class="modal-form">
+      <div class="modal-header">
+        <h3>Tambah Rekod Penyelenggaraan</h3>
+      </div>
+      <div class="form-group">
+        <label>Komputer</label>
+        <select id="maintPcId" required class="input-field mono-text"></select>
+      </div>
+      <div class="form-group">
+        <label>Jenis Penyelenggaraan</label>
+        <select id="maintType" class="input-field">
+          <option value="Pencegahan (Preventive)">Pencegahan (Preventive)</option>
+          <option value="Pembaikan (Corrective)">Pembaikan (Corrective)</option>
+          <option value="Pemeriksaan Rutin">Pemeriksaan Rutin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tarikh Penyelenggaraan</label>
+        <input type="date" id="maintDate" required class="input-field">
+      </div>
+      <div class="form-group">
+        <label>Catatan Kerosakan / Tindakan</label>
+        <textarea id="maintNotes" rows="3" required placeholder="Perihalkan kerosakan atau tindakan pembaikan..." class="input-field"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Status Penyelenggaraan</label>
+        <select id="maintStatus" class="input-field">
+          <option value="Selesai">Selesai</option>
+          <option value="Dalam Proses">Dalam Proses</option>
+          <option value="Belum Selesai">Belum Selesai</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="button button-outline" onclick="closeMaintenanceModal()">Batal</button>
+        <button type="submit" class="button">Rekodkan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
